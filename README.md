@@ -6,16 +6,20 @@
 
 ## 本地运行
 ``` bash
-# 1. 连接数据库
+# 1. 启动数据库
 mongod.exe
 
 # 2. 后端服务运行 => localhost:3000
 cd node-blog
+
 npm install
+
 npm run dev
 
 # 3. 前端项目运行 => localhost:8080
-npm install
-npm run serve
+cd vue-blog
 
+npm install
+
+npm run serve
 ```

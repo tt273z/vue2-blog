@@ -1,21 +1,10 @@
 # vue-blog
+基于 vue2 构建的单页面博客系统
+## 运行
+```
+cd vue-blog
 
-## Project setup
-```
-npm install
-```
+npm i
 
-### Compiles and hot-reloads for development
-```
 npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
 ```

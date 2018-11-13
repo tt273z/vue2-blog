@@ -11,15 +11,11 @@ mongod.exe
 
 # 2. 后端服务运行 => localhost:3000
 cd node-blog
-
 npm install
-
 npm run dev
 
 # 3. 前端项目运行 => localhost:8080
 cd vue-blog
-
 npm install
-
 npm run serve
 ```

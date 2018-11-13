@@ -1,7 +1,7 @@
 <template>
   <div class="blog-list" v-loading="loading">
     <h1 v-if="!blogList.length" style="text-align:center">没有文章可以看 (逃</h1>
-    <el-button type="text" style="float:right" @click="getAllPosts">点击获取全部文章</el-button>      
+    <!-- <el-button type="text" style="float:right" @click="getAllPosts">点击获取全部文章</el-button>       -->
     <el-card shadow="hover" v-for="(blog, index) in blogList" 
              :key="index" class="card" >
       <p class="title" @click="getDetail(blog._id)">{{ blog.title }}</p>
@@ -19,11 +19,12 @@ export default {
   name: 'BlogList',
   created(){
     this.getAllPosts()
+    sessionStorage.setItem('crumb', JSON.stringify([{ title: '博客主页', path: '/' }]))
   },
   data(){
     return {
       blogList: [],
-      loading: true
+      loading: true,
     }
   },
   methods: {
@@ -51,7 +52,6 @@ export default {
           console.log(err)
           this.loading = false
         })
-      
     }
   }
 }
@@ -59,6 +59,9 @@ export default {
 
 <style lang="scss">
 .blog-list {
+  width: 90%;
+  min-width: 700px;
+  margin: auto;
   .card {
     width: 100%;
     max-height: 150px;

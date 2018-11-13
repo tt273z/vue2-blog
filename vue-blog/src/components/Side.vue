@@ -18,7 +18,7 @@
     </el-submenu> -->
     <el-menu-item index="1">
       <i class="el-icon-menu"></i>
-      <span slot="title">文章检索</span>
+      <span slot="title">条件查询</span>
     </el-menu-item>
     <el-menu-item index="2">
       <i class="el-icon-menu"></i>

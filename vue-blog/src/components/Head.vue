@@ -1,23 +1,11 @@
 <template>
   <div class="head">
-    <el-menu :default-active="$route.path" mode="horizontal" @select="handleSelect" 
+    <el-menu :default-active="$route.path" mode="horizontal" @slect="handleSelect"
               background-color="#545c64" text-color="#fff" active-text-color="#ffd04b"
               router>
       <el-menu-item index="/">博客主页</el-menu-item>      
       <el-menu-item index="/post">发表文章</el-menu-item>
       <el-menu-item index="/me">我的文章</el-menu-item>
-      <!-- <el-submenu index="2">
-        <template slot="title">我的文章</template>
-        <el-menu-item index="2-1">选项1</el-menu-item>
-        <el-menu-item index="2-2">选项2</el-menu-item>
-        <el-menu-item index="2-3">选项3</el-menu-item>
-        <el-submenu index="2-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="2-4-1">选项1</el-menu-item>
-          <el-menu-item index="2-4-2">选项2</el-menu-item>
-          <el-menu-item index="2-4-3">选项3</el-menu-item>
-        </el-submenu>
-      </el-submenu> -->
       <el-menu-item index="3">消息中心</el-menu-item>
       <el-menu-item index="/users">用户管理</el-menu-item>
       <el-dropdown @command="onCommand" v-if="$store.state.username">
@@ -32,7 +20,6 @@
       <span @click="pop" class="login-link" v-else>{{ topText }}</span>
       <Login @changeVisible="closeDialogForm" :dialogFormVisible="isVisible"/>    
     </el-menu>
-
   </div>
 </template>
 
@@ -41,7 +28,7 @@ import Login from './Login.vue'
 export default {
   name: 'Head',
   components: {
-    Login
+    Login,
   },
   data(){
     return {
@@ -55,8 +42,18 @@ export default {
     }
   },
   methods: {
-    handleSelect(key, keyPath){
-      console.log('nav clicked ' + key + ' path: ' + keyPath)
+    handleSelect(key){
+      let crumbList = []
+      if(key == '/') {
+        crumbList.push({ title: '博客主页', path: '/' })
+      } else if (key == '/post') {
+        crumbList.push({ title: '发表文章', path: '/post' })
+      } else if(key == '/me') {
+        crumbList.push({ title: '我的文章', path: '/me' })
+      } else if(key == '/users') {
+        crumbList.push({ title: '用户管理', path: '/users' })
+      } 
+      sessionStorage.setItem('crumb', JSON.stringify(crumbList))
     },
     closeDialogForm(){
       this.isVisible = false

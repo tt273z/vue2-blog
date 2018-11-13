@@ -1,5 +1,9 @@
 <template>
   <div class="blog-detail">
+    <div class="top">
+      <Crumb :crumbList="crumbList" v-fl/>
+      <el-button icon="el-icon-arrow-left" plain size="mini" v-fr @click="back()">返回</el-button>
+    </div>
     <el-card>
       <h1 class="title">{{ blogInfo.title }}</h1>
       <p class="author">{{ blogInfo.author }} | {{ blogInfo.time }} <span class="pv">Visited: {{ blogInfo.pv? blogInfo.pv: 0 }}</span></p>
@@ -32,13 +36,16 @@ export default {
   name: "BlogDetail",
   created() {
     this.getPosts()
+    this.crumbList = JSON.parse(sessionStorage.getItem('crumb'))
+    this.crumbList.push({ title: '文章详情' })
   },
   data() {
     return {
       blogInfo: {},
       id: this.$route.params.id,
       comment: '',
-      comments: []
+      comments: [],
+      crumbList: []
     }
   },
   methods: {

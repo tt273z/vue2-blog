@@ -4,6 +4,7 @@ import * as types from './store/types'
 
 axios.defaults.baseURL = 'http://localhost:3000/api'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
+axios.defaults.timeout = 5000
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 

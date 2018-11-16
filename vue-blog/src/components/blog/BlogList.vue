@@ -1,6 +1,5 @@
 <template>
-  <div class="blog-list" v-loading="loading">
-    <h1 v-if="!blogList.length" style="text-align:center">没有文章可以看 (逃</h1>
+  <div class="blog-list" v-loading.fullscreen.lock="loading">
     <!-- <el-button type="text" style="float:right" @click="getAllPosts">点击获取全部文章</el-button>       -->
     <el-card shadow="hover" v-for="(blog, index) in blogList" 
              :key="index" class="card" >
@@ -10,6 +9,7 @@
         阅读({{ blog.pv? blog.pv: 0 }}) 评论({{ blog.comments? blog.comments.length: 0 }})        
       </p>
     </el-card>
+    <h1 v-if="!blogList.length" style="text-align:center">没有文章可以看 (逃</h1>
   </div>
 </template>
 

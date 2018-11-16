@@ -38,6 +38,10 @@ const router = new Router({
       name: 'person',
       meta: { needLogin: true },
       component: () => import('@/components/user/UserInfo.vue')
+    }, {
+      path: '/query',
+      name: 'query',
+      component: () => import('@/components/tool/Query.vue')
     }
   ]
 })

@@ -8,9 +8,10 @@ var router = express.Router()
 
 var index = require('./routes/index');
 
-var user = require('./models/user');
+var user = require('./models/user')
 var post = require('./models/post')
 var test = require('./models/test')
+var test = require('./models/tool')
 
 var app = express();
 
@@ -35,7 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/api', user, post);
+app.use('/api', user, post, tool);
 app.use('/test', test)
 
 

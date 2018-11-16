@@ -39,7 +39,7 @@ const post = (req, res, next) => {
 	})
 }
 
-//三种方式获取文章 user用户名/tag标签/id文章id/没有查询参数获取全部文章
+//三种传参方式获取文章 user用户名/tag标签/id文章id/没有查询参数获取全部文章
 const getPosts = (req, res, next) => {
 	if(req.query.id) {
 		Model.Post.findById(req.query.id, (err, docs) => {

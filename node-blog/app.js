@@ -11,7 +11,7 @@ var index = require('./routes/index');
 var user = require('./models/user')
 var post = require('./models/post')
 var test = require('./models/test')
-var test = require('./models/tool')
+var tool = require('./models/tool')
 
 var app = express();
 

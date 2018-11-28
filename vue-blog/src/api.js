@@ -74,6 +74,9 @@ export default {
   },
   getUserInfo(name){
     return axios.get('/getUser', { params: { name: name } })
+  },
+  queryByCondition(data){
+    return axios.post('/tool/query', data)
   }
 
 }

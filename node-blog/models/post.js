@@ -116,6 +116,7 @@ const addComment = (req, res, next) => {
 		})
 }
 
+//获取所有标签
 const getAllTags = (req, res, next) => {
 	Model.Post.find({}, (err, docs) => {
 		if(err) return next(err)
@@ -131,12 +132,14 @@ const getAllTags = (req, res, next) => {
 	})
 }
 
+
 router.post('/posts/post', post)
 router.get('/posts', getPosts)
 router.post('/posts/edit', edit)
 router.post('/posts/del', del)
 router.post('/posts/comment', addComment)
 router.get('/posts/tags', getAllTags)
+
 
 module.exports = router
 

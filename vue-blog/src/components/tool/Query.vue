@@ -2,43 +2,51 @@
   <div class="query">
     <el-card>
       <p class="header">条件查询</p>
-      <el-form ref="queryform" label-width="80px">
+      <el-form :model="query" label-width="80px">
         <el-col :md="12" :sm="12" :xs="24">
-          <el-form-item label="文章标题">
-            <el-input v-full size="small" v-model.trim="query.title"></el-input>
+          <el-form-item label="文章标题" prop="title">
+            <el-input v-full size="medium" v-model.trim="query.title"></el-input>
           </el-form-item>
         </el-col>
-        <el-form-item label="发表日期">
-          <el-col :md="5" :sm="24" :xs="24">
-            <el-date-picker size="small" type="date" v-full v-model.trim="query.beginDate"  placeholder="选择日期"></el-date-picker> 
-          </el-col>
-          <el-col :md="1" v-center>-</el-col>
-          <el-col :md="5" :sm="24" :xs="24">
-            <el-date-picker size="small" type="date" v-full v-model.trim="query.endDate" placeholder="选择日期"></el-date-picker> 
-          </el-col>
-        </el-form-item>
         <el-col :md="12" :sm="12" :xs="24">
-          <el-form-item label="作者">
-            <el-input v-full size="small" v-model.trim="query.author"></el-input>
+          <el-form-item label="文章作者" prop="author">
+            <el-input v-full size="medium" v-model.trim="query.author"></el-input>
           </el-form-item>
         </el-col>        
         <el-col :md="12" :sm="24" :xs="24">
-          <el-form-item label="标签">
-            <el-select  v-full v-model.trim="query.tags" filterable size="small" placeholder="请选择文章标签">
+          <el-form-item label="文章标签" prop="tags">
+            <!-- <el-select  v-full v-model.trim="query.tags" filterable size="medium" placeholder="请选择文章标签">
               <el-option v-for="item in tags" :key="item" :label="item" :value="item">
               </el-option>
-            </el-select>
+            </el-select> -->
+            <el-autocomplete v-full size="medium" v-model.trim="query.tags" :fetch-suggestions="searchTags" placeholder="请输入标签" 
+              :trigger-on-focus="false" @select="handleSelect">
+              <template slot-scope="tags">
+                <p>{{tags.item}}</p>
+              </template>
+            </el-autocomplete>
           </el-form-item>
         </el-col>
+        <el-col :md="12" :sm="24" :xs="24">
+          <el-form-item label="发表日期" prop="beginDate">
+            <el-col :md="11" :sm="24" :xs="24">
+              <el-date-picker size="medium" type="date" v-full v-model.trim="query.beginDate"  placeholder="选择日期"></el-date-picker> 
+            </el-col>
+            <el-col :md="2" v-center>-</el-col>
+            <el-col :md="11" :sm="24" :xs="24">
+              <el-date-picker size="medium" type="date" v-full v-model.trim="query.endDate" placeholder="选择日期"></el-date-picker> 
+            </el-col>
+          </el-form-item>               
+        </el-col>
         <el-col :span="24" v-center style="padding-top:10px;">
-          <el-button size="small" type="primary" @click="submit">查询</el-button>
-          <el-button size="small" plain @click="clear">重置</el-button>
+          <el-button size="medium" type="primary" @click="submit()">查询</el-button>
+          <el-button size="medium" plain @click="clear()">重置</el-button>
         </el-col>
       </el-form>
     </el-card>
     <el-card style="margin-top:5px;">
       <p class="header">查询结果</p>
-      <el-table :data="resList" v-full>
+      <el-table :data="resList" v-full v-loading="loading">
         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="author" label="作者"></el-table-column>
@@ -56,12 +64,23 @@
 </template>
 <script>
 import http from "@/api"
+class QueryModel {
+  constructor(title, author, tags, beginDate, endDate){
+    this.title = title
+    this.author = author
+    this.tags = tags
+    this.beginDate = beginDate
+    this.endDate = endDate
+  }
+
+}
 export default {
   data(){
     return {
       resList: [],
-      query: {},
-      tags: []
+      query: new QueryModel(),
+      tags: [],
+      loading: true
     }
   },
   mounted(){
@@ -70,16 +89,18 @@ export default {
   },
   methods: {
     submit(){
+      this.loading = true
       http.queryByCondition({ json: JSON.stringify(this.query) })
         .then(({data}) => {
           this.resList = data
+          this.loading = false
         })
     },
     clear(){
-      this.$refs.queryform.resetFields()
+      this.query = new QueryModel()
     },
     pushDetail(row){
-
+      console.log(row)
     },
     tagsFormatter(row){
       return row.tags.join(' / ')
@@ -89,15 +110,22 @@ export default {
         .then(({data}) => {
           this.tags = data
         })
-    }
+    },
+    searchTags(str, cb){
+      var result = str ? this.tags.filter(e => e.toLowerCase().indexOf(str.toLowerCase()) != -1 ) : this.tags;
+      cb(result)
+    },
+    handleSelect(item){
+      this.query.tags = item
+    },
   }
 }
 </script>
 <style lang="scss">
 .query {
-  .header {
-    color: #afb7ba; font-size: 14px; padding: 10px 0; }
-  .el-form-item { margin-bottom: 0; }
+  .header { color: #afb7ba; font-size: 14px; padding: 10px 0; }
+  .el-form-item { margin-bottom: 5px; }
   .el-card__body { overflow: hidden;  padding-top: 0; }
+  .el-autocomplete-suggestion__wrap { padding: 5px 0; }
 }
 </style>

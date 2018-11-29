@@ -46,12 +46,14 @@
     </el-card>
     <el-card style="margin-top:5px;">
       <p class="header">查询结果</p>
-      <el-table :data="resList" v-full v-loading="loading">
+      <el-table :data="resList" v-full v-loading="loading" :default-sort = "{prop: 'pv', order: 'descending'}">
         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="author" label="作者"></el-table-column>
         <el-table-column prop="time" label="发表时间"></el-table-column>
         <el-table-column prop="tags" label="标签" :formatter="tagsFormatter"></el-table-column>
+        <el-table-column prop="pv" label="pv" sortable></el-table-column>
+        <el-table-column prop="comments" label="评论数" :formatter="comFormatter" sortable></el-table-column>
         <el-table-column label="操作" fixed="right" width="100">
           <template slot-scope="list">
             <!-- <i class="el-icon-view"></i> -->
@@ -105,6 +107,9 @@ export default {
     tagsFormatter(row){
       return row.tags.join(' / ')
     },
+    comFormatter(row){
+      return row.comments.length
+    },
     getTags(){
       http.getAllTags()
         .then(({data}) => {
@@ -118,6 +123,7 @@ export default {
     handleSelect(item){
       this.query.tags = item
     },
+    
   }
 }
 </script>

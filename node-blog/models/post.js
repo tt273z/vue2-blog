@@ -116,11 +116,27 @@ const addComment = (req, res, next) => {
 		})
 }
 
+const getAllTags = (req, res, next) => {
+	Model.Post.find({}, (err, docs) => {
+		if(err) return next(err)
+		let tags = []
+		docs.map(e => {
+			e.tags.map(tag => {
+				if(tags.indexOf(tag) == -1) {
+					tags.push(tag)
+				}	
+			})
+		})
+		res.json(tags)
+	})
+}
+
 router.post('/posts/post', post)
 router.get('/posts', getPosts)
 router.post('/posts/edit', edit)
 router.post('/posts/del', del)
 router.post('/posts/comment', addComment)
+router.get('/posts/tags', getAllTags)
 
 module.exports = router
 

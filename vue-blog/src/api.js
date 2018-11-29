@@ -77,6 +77,9 @@ export default {
   },
   queryByCondition(data){
     return axios.post('/tool/query', data)
+  },
+  getAllTags(){
+    return axios.get('/posts/tags')
   }
 
 }

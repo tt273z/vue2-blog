@@ -1,6 +1,6 @@
 <template>
   <div class="user-list">
-    <el-table v-loading="loading" :data="userList" style="width:100%">
+    <el-table v-loading="loading" :data="userList" v-full>
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column type="index" width="50"></el-table-column>
       <el-table-column prop="name" label="用户名"></el-table-column>

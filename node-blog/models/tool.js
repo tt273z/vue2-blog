@@ -7,6 +7,7 @@ const moment = require('moment')
 // json:{ beginDate endDate author title tag } 
 const queryByCondition = (req, res, next) => {
 	let json = JSON.parse(req.body.json)
+	console.log(req.body.json)
 	function reg(key) { return new RegExp(key, 'i') }
 	let condition = []
 	if(json.title != undefined && json.title != '') {

@@ -25,7 +25,7 @@
         <el-col :md="12" :sm="24" :xs="24">
           <el-form-item label="标签">
             <el-select  v-full v-model.trim="query.tags" filterable size="small" placeholder="请选择文章标签">
-              <el-option v-for="item in options5" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="item in tags" :key="item" :label="item" :value="item">
               </el-option>
             </el-select>
           </el-form-item>
@@ -36,9 +36,21 @@
         </el-col>
       </el-form>
     </el-card>
-    <el-card>
+    <el-card style="margin-top:5px;">
       <p class="header">查询结果</p>
-      <div v-for="(item, index) in resList" :key="index">{{ item.title }}</div>
+      <el-table :data="resList" v-full>
+        <el-table-column type="index" width="50"></el-table-column>
+        <el-table-column prop="title" label="标题"></el-table-column>
+        <el-table-column prop="author" label="作者"></el-table-column>
+        <el-table-column prop="time" label="发表时间"></el-table-column>
+        <el-table-column prop="tags" label="标签" :formatter="tagsFormatter"></el-table-column>
+        <el-table-column label="操作" fixed="right" width="100">
+          <template slot-scope="list">
+            <!-- <i class="el-icon-view"></i> -->
+            <el-button  @click="showDetail(list.row)" type="text" size="small">查看</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-card>
   </div>
 </template>
@@ -49,27 +61,34 @@ export default {
     return {
       resList: [],
       query: {},
-      options5: [{
-          value: 'HTML',
-          label: 'HTML'
-        }, {
-          value: 'CSS',
-          label: 'CSS'
-        }, {
-          value: 'JavaScript',
-          label: 'JavaScript'
-        }],
+      tags: []
     }
+  },
+  mounted(){
+    this.getTags()
+    this.submit()
   },
   methods: {
     submit(){
-      http.queryByCondition(JSON.stringify(this.query))
+      http.queryByCondition({ json: JSON.stringify(this.query) })
         .then(({data}) => {
           this.resList = data
         })
     },
     clear(){
       this.$refs.queryform.resetFields()
+    },
+    pushDetail(row){
+
+    },
+    tagsFormatter(row){
+      return row.tags.join(' / ')
+    },
+    getTags(){
+      http.getAllTags()
+        .then(({data}) => {
+          this.tags = data
+        })
     }
   }
 }

@@ -102,7 +102,7 @@ export default {
       this.query = new QueryModel()
     },
     pushDetail(row){
-      console.log(row)
+      this.$router.push({ name: 'postid', params: { id: row._id } })
     },
     tagsFormatter(row){
       return row.tags.join(' / ')

@@ -85,6 +85,10 @@ export default {
       loading: true
     }
   },
+  created(){
+    let crumbList = [{ title: '条件查询', path: '/query' }]
+    sessionStorage.setItem('crumb', JSON.stringify(crumbList))
+  },
   mounted(){
     this.getTags()
     this.submit()
@@ -101,7 +105,7 @@ export default {
     clear(){
       this.query = new QueryModel()
     },
-    pushDetail(row){
+    showDetail(row){
       this.$router.push({ name: 'postid', params: { id: row._id } })
     },
     tagsFormatter(row){

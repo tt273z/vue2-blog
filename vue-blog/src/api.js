@@ -43,6 +43,9 @@ export default {
   login(data) {
     return axios.post('/login', data)
   },
+  logout(name) {
+    return axios.get('/logout', { params: { name: name } })
+  },
   post(data) { //发表文章
     return axios.post('/posts/post', data)
   },

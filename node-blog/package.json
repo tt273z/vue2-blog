@@ -13,11 +13,12 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "formidable": "^1.2.1",
+    "jsonwebtoken": "^8.3.0",
+    "moment": "^2.22.2",
     "mongoose": "^5.2.6",
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5",
-    "jsonwebtoken": "^8.3.0",
-    "moment": "^2.22.2"
+    "ws": "^6.1.2"
   },
   "devDependencies": {
     "chalk": "^2.4.1",

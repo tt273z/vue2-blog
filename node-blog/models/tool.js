@@ -1,7 +1,6 @@
 const express = require('express')
 const Model = require('../mongodb/db')
 const router = express.Router()
-const mongoose = require('mongoose')
 const moment = require('moment')
 
 // json:{ beginDate endDate author title tag } 

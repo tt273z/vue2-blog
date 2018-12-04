@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import http from "@/api"
 import Login from './Login.vue'
 export default {
   name: 'Head',
@@ -63,9 +64,18 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$store.dispatch('userLogout')
-        this.$message({ type: 'success', message: '已退出当前账号' })
-        this.$router.push('/')
+        http.logout(this.topText)
+          .then(({data}) => {
+            debugger
+            if(data.code) {
+              this.$store.dispatch('userLogout')
+              this.$message({ type: 'success', message: '已退出当前账号' })
+              this.$router.push('/')              
+            } else {
+              this.$message({ type: 'error', message: data.message })
+            }
+          })
+
       })          
       
     },

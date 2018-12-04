@@ -45,30 +45,60 @@ const register = (req, res, next) => {
 //登录
 const login = (req, res, next) => {
 	let password = req.body.password
-	Model.User.findOne({ name: req.body.name }, (err, docs) => {
+	let user = {
+		name: req.body.name,
+		password: req.body.password
+	}
+	Model.User.findOne({ name: user.name }, (err, docs) => {
 		if(err) return next(err)
 		if(!docs){ //用户不存在
-			console.log(error('用户' + req.body.name + '不存在'))
+			console.log(error('用户' + user.name + '不存在'))
 			res.json({
 				message: '用户不存在',
 				code: 0
 			})
-		} else if(req.body.password === docs.password) {
-			console.log(success('用户' + req.body.name + '登录成功'))
+		} else if(user.password === docs.password) {
+			console.log(success('用户' + user.name + '登录成功'))
+			Model.User.updateOne({ name: user.name }, { online: 1 }, (err) => {
+				if(err) {
+					console.log(error('用户在线状态更新失败'))
+				} else {
+					console.log(success('用户在线状态更新成功：已在线'))
+				}
+			})
 			res.json({
 				data: {
-					name: req.body.name,
-					password: req.body.password,
-					token: token.createToken(req.body.name)
+					name: user.name,
+					password: user.password,
+					token: token.createToken(user.name)
 				},
 				message: '用户登录成功',
 				code: 1
 			})
 		} else {
-			console.log('密码错误')
 			res.json({
 				message: '密码错误',
 				code: 0
+			})
+		}
+	})
+}
+
+//登出
+const logout = (req, res, next) => {
+	Model.User.updateOne({ name: req.query.name }, { online: 0 }, (err) => {
+		if(err) {
+			console.log(error('用户在线状态更新失败'))
+			res.json({
+				message: '用户登出异常',
+				code: 0
+			})
+			return next(err)
+		} else {
+			console.log(success('用户在线状态更新成功：已离线'))
+			res.json({
+				message: '用户登出成功',
+				code: 1
 			})
 		}
 	})
@@ -141,6 +171,7 @@ const uploadAvatar = (req, res, next) => {
 
 router.post('/register', register)
 router.post('/login', login)
+router.get('/logout', token.checkToken, logout)
 router.get('/users', token.checkToken, getUsers)
 router.post('/delUser', token.checkToken, delUser)
 router.get('/getUser', token.checkToken, getUserByName)

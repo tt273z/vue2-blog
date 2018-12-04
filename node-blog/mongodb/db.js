@@ -20,7 +20,8 @@ const userSchema = new Schema({
 	name: String,
 	password: String,
 	avatar: { type: String, default: 'default.jpg' },
-	token: String
+	token: String,
+	online: { type: Number, default: 0 }
 })
 
 const postSchema = new Schema({

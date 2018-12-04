@@ -1,5 +1,5 @@
 <template>
-  <el-menu style="height:100%" default-active="2" @open="handleOpen" @close="handleClose" 
+  <el-menu style="height:100%" @open="handleOpen" @close="handleClose" 
            background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router>
     <el-menu-item index="/query">
       <i class="el-icon-menu"></i>

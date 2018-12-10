@@ -1,30 +1,20 @@
 <template>
   <div id="app">
-    <el-container>
-      <el-header><Head/></el-header>
-      <el-container>
-        <el-aside width="200px"><Side/></el-aside>
-        <el-main>
-          <router-view/>
-        </el-main>
-      </el-container>
-    </el-container>
+    <Main/>
   </div>
 </template>
 
 <script>
-import Head from './components/Head.vue'
-import Side from './components/Side.vue'
+import Main from '@/components/Main.vue'
 export default {
   name: 'app',
   components: {
-    Head,
-    Side
-  }
+    Main
+  },
 };
 </script>
 
-<style>
+<style lang="scss">
 html, body, #app > .el-container, #app { height: 100%; }
 body, ul, li, p, h1, h2 {
   padding: 0; 
@@ -55,5 +45,4 @@ a:hover {
   margin-right: 5px;
 }
 .top { height: 40px; }
-
 </style>

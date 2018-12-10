@@ -6,7 +6,9 @@
       <el-menu-item index="/">博客主页</el-menu-item>      
       <el-menu-item index="/post">发表文章</el-menu-item>
       <el-menu-item index="/me">我的文章</el-menu-item>
-      <el-menu-item index="3">消息中心</el-menu-item>
+      <el-badge :value="3">
+        <el-menu-item index="3">消息中心</el-menu-item>
+      </el-badge>
       <el-menu-item index="/users">用户管理</el-menu-item>
       <el-dropdown @command="onCommand" v-if="$store.state.username">
         <span class="el-dropdown-link" @click="pop">
@@ -66,7 +68,6 @@ export default {
       }).then(() => {
         http.logout(this.topText)
           .then(({data}) => {
-            debugger
             if(data.code) {
               this.$store.dispatch('userLogout')
               this.$message({ type: 'success', message: '已退出当前账号' })
@@ -115,7 +116,11 @@ export default {
     font-size: 14px;
     cursor: pointer;
   }
-
+  .el-badge__content.is-fixed { 
+    margin-top: 10px;
+    margin-right: 10px;
+    border: none;
+  }
 }
 
 </style>

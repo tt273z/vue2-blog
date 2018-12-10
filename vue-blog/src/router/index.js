@@ -42,6 +42,10 @@ const router = new Router({
       path: '/query',
       name: 'query',
       component: () => import('@/components/tool/Query.vue')
+    }, {
+      path: '/notice',
+      name: 'notice',
+      component: () => import('@/components/user/Notice.vue')
     }
   ]
 })

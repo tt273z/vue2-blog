@@ -4,6 +4,8 @@ const router = express.Router()
 const chalk = require('chalk')
 const moment = require('moment')
 const mongoose = require('mongoose')
+const WebSocket = require('ws');
+const config = require('../utils/config')
 const ObjectId = mongoose.Types.ObjectId
 
 const error = chalk.bold.red
@@ -111,6 +113,19 @@ const addComment = (req, res, next) => {
 				res.send(new Number(0))
 				return next(err)
 			} else {
+				//根据请求参数中的 author(被评论文章的用户名) 进行消息推送
+				//如果用户在线直接推送 不在线先存储等上线一并推送
+				Model.User.findOne({ name: req.body.author }, (err, docs) => {
+					if(err) return next(err)
+					if(docs.online) { //1在线0离线
+						let ws = new WebSocket(`${config.wsServer}/uname=${req.body.author}`);
+						ws.on('open', function open() {
+						  ws.send(comment);
+						});
+					} else {
+
+					}
+				})
 				res.send(new Number(1))
 			}
 		})

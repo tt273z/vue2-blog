@@ -67,6 +67,7 @@ export default {
       }
       http.addComment({
         name: this.$store.state.username,
+        author: this.blogInfo.author,
         id: this.id,
         text: this.comment
       }).then(({ data }) => {

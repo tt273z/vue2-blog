@@ -66,18 +66,26 @@ export default {
   data(){
     return {
       isVisible: false,
+      ws: {},
     }
   },
   created(){
-    const ws = new WebSocket(config.wsServer)
-    ws.onopen = () => {
-
+    let username = this.$store.state.username
+    if(!username) return
+    this.ws = new WebSocket(`${config.wsServer}/${username}`)
+    this.ws.onopen = () => {
+      console.log('ws open')
     }
-    ws.onmessage = () => {
-
+    this.ws.onmessage = (ev) => {
+      console.log(ev.data)
+      this.$notify({
+        title: '消息通知',
+        message: JSON.stringify(ev.data),
+        duration: 0
+      });
     }
-    ws.onclose = () => {
-      
+    this.ws.onclose = () => {
+      console.log('ws close')
     }
   },
   computed: {
@@ -112,6 +120,7 @@ export default {
           .then(({data}) => {
             if(data.code) {
               this.$store.dispatch('userLogout')
+              this.ws.onclose()
               this.$message({ type: 'success', message: '已退出当前账号' })
               this.$router.push('/')              
             } else {

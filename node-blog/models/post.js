@@ -4,9 +4,10 @@ const router = express.Router()
 const chalk = require('chalk')
 const moment = require('moment')
 const mongoose = require('mongoose')
-const WebSocket = require('ws');
 const config = require('../utils/config')
 const ObjectId = mongoose.Types.ObjectId
+
+var wss = require('../utils/ws.js')
 
 const error = chalk.bold.red
 const success = chalk.bold.green
@@ -118,10 +119,13 @@ const addComment = (req, res, next) => {
 				Model.User.findOne({ name: req.body.author }, (err, docs) => {
 					if(err) return next(err)
 					if(docs.online) { //1在线0离线
-						let ws = new WebSocket(`${config.wsServer}/uname=${req.body.author}`);
-						ws.on('open', function open() {
-						  ws.send(comment);
-						});
+						// wss.on('connection', function connection(ws, req) {
+						//   console.log(req.url)
+						//   ws.on('message', function incoming(message) {
+						//     console.log('received: %s', message);
+						//   });
+						//   ws.send(JSON.stringify())
+						// });
 					} else {
 
 					}

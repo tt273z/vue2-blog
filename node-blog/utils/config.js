@@ -1,3 +1,3 @@
 module.exports = {
-	wsServer: 'ws://localhost:8000'
+	wsServer: 'ws://10.200.220.158:8080'
 }

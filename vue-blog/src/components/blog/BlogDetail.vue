@@ -22,7 +22,7 @@
         </div>
         <div class="comment-form">
           <p class="comment-title">发表评论</p>
-          <el-input class="margin-bottom" v-model="comment" type="textarea" resize="none"></el-input>
+          <el-input class="margin-bottom" v-model.trim="comment" type="textarea" resize="none"></el-input>
           <el-button class="btn" type="primary" @click="addComment">发表评论</el-button>
         </div>
       </div>
@@ -32,6 +32,7 @@
 
 <script>
 import http from "@/api"
+import config from '@/assets/config'
 export default {
   name: "BlogDetail",
   created() {
@@ -74,7 +75,13 @@ export default {
         if(data) {
           this.$message({ message: '评论成功', type: 'success' })
           this.getPosts()
-          this.comment = ''
+          let ws = new WebSocket(`${config.wsServer}/${this.blogInfo.author}`)
+          ws.onopen = () => {
+            console.log('ws1 open')
+            ws.send(JSON.stringify({text: this.comment}))
+
+          }
+          // this.comment = ''
         } else {
           this.$message({ message: '评论失败', type: 'error' })
         }

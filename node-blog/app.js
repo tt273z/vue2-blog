@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var router = express.Router()
 
+var wss = require('./utils/ws.js')
+
 var index = require('./routes/index');
 
 var user = require('./models/user')

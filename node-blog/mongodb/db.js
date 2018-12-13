@@ -29,7 +29,8 @@ const postSchema = new Schema({
 	title: String,
 	content: String,
 	time: String,
-	comments: [{ name: String, time: String, text: String }],
+	// read 0未读 1已读  name评论人用户名
+	comments: [{ name: String, time: String, text: String, read: Number }],
 	tags: Array,
 	pv: { type: Number, default: 0 }
 })

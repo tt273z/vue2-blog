@@ -72,20 +72,22 @@ export default {
   created(){
     let username = this.$store.state.username
     if(!username) return
-    this.ws = new WebSocket(`${config.wsServer}/${username}`)
+    this.ws = new WebSocket(`${config.wsServer}`)
     this.ws.onopen = () => {
-      console.log('ws open')
+      console.log(username + ':user login ws is opened')
+      this.ws.send(JSON.stringify({ type: 'login', username }))
     }
     this.ws.onmessage = (ev) => {
       console.log(ev.data)
+      let data = JSON.parse(ev.data)
       this.$notify({
         title: '消息通知',
-        message: JSON.stringify(ev.data),
+        message: `${data.commentor} 评论了您的文章`,
         duration: 0
       });
     }
     this.ws.onclose = () => {
-      console.log('ws close')
+      console.log(username + ':login ws is closed')
     }
   },
   computed: {

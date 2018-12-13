@@ -62,12 +62,13 @@ export default {
       )
     },
     addComment(){
+      let username = this.$store.state.username
       if(!this.comment) {
         this.$message.error('评论内容不能为空')
         return
       }
       http.addComment({
-        name: this.$store.state.username,
+        name: username,
         author: this.blogInfo.author,
         id: this.id,
         text: this.comment
@@ -75,13 +76,14 @@ export default {
         if(data) {
           this.$message({ message: '评论成功', type: 'success' })
           this.getPosts()
-          let ws = new WebSocket(`${config.wsServer}/${this.blogInfo.author}`)
+          let ws = new WebSocket(`${config.wsServer}`)
           ws.onopen = () => {
-            console.log('ws1 open')
-            ws.send(JSON.stringify({text: this.comment}))
-
+            console.log('comment ws is opened')
+            ws.send(JSON.stringify({ type: 'comment', author: this.blogInfo.author, commentor: username }))
+            this.comment = ''
+            ws.onclose()
           }
-          // this.comment = ''
+          ws.onclose = () => console.log('comment ws is closed')
         } else {
           this.$message({ message: '评论失败', type: 'error' })
         }

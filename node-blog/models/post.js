@@ -5,6 +5,7 @@ const chalk = require('chalk')
 const moment = require('moment')
 const mongoose = require('mongoose')
 const config = require('../utils/config')
+const shortid = require('shortid');
 const ObjectId = mongoose.Types.ObjectId
 
 var wss = require('../utils/ws.js')
@@ -103,7 +104,9 @@ const del = (req, res, next) => {
 
 //存储评论
 const addComment = (req, res, next) => {
+	let cid = shortid.generate()
 	var comment = {
+		id: cid,
 		name: req.body.name,
 		text: req.body.text,
 		time: moment().format('YYYY-MM-DD HH:mm')
@@ -119,16 +122,28 @@ const addComment = (req, res, next) => {
 				Model.User.findOne({ name: req.body.author }, (err, docs) => {
 					if(err) return next(err)
 					if(docs.online) { //1在线0离线
-						// wss.on('connection', function connection(ws, req) {
-						//   console.log(req.url)
-						//   ws.on('message', function incoming(message) {
-						//     console.log('received: %s', message);
-						//   });
-						//   ws.send(JSON.stringify())
-						// });
+						let ws = new WebSocket(`${config.wsServer}`)
+	          ws.onopen = () => {
+	            console.log('comment ws is opened')
+	            //生成消息并push到user文档中
+	            let notice = {
+	            	id: shortid.generate(),
+	            	type: 'comment',
+	            	pid: req.body.id,
+	            	cid: cid
+	            }
+	            ws.send(JSON.stringify(Object.assign(notice, { author: req.body.author})))
+	            ws.onclose()
+	          }
+	          ws.onclose = () => console.log('comment ws is closed')
 					} else {
 
 					}
+					//TODO
+					Model.User.update({ name: req.body.author }, 
+						{ $push: { notice: notice } }, (err) => {
+							if(err) return next(err)
+					})
 				})
 				res.send(new Number(1))
 			}

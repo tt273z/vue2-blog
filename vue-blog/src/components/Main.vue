@@ -82,7 +82,7 @@ export default {
       let data = JSON.parse(ev.data)
       this.$notify({
         title: '消息通知',
-        message: `${data.commentor} 评论了您的文章`,
+        message: `收到一条新评论`,
         duration: 0
       });
     }

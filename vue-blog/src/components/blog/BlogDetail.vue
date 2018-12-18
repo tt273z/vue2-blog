@@ -71,22 +71,15 @@ export default {
         name: username,
         author: this.blogInfo.author,
         id: this.id,
-        text: this.comment
+        text: this.comment,
       }).then(({ data }) => {
         if(data) {
           this.$message({ message: '评论成功', type: 'success' })
           this.getPosts()
-          let ws = new WebSocket(`${config.wsServer}`)
-          ws.onopen = () => {
-            console.log('comment ws is opened')
-            ws.send(JSON.stringify({ type: 'comment', author: this.blogInfo.author, commentor: username }))
-            this.comment = ''
-            ws.onclose()
-          }
-          ws.onclose = () => console.log('comment ws is closed')
         } else {
           this.$message({ message: '评论失败', type: 'error' })
         }
+        this.comment = ''        
       })
     },
   }

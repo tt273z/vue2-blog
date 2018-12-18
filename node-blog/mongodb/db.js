@@ -21,7 +21,9 @@ const userSchema = new Schema({
 	password: String,
 	avatar: { type: String, default: 'default.jpg' },
 	token: String,
-	online: { type: Number, default: 0 }
+	online: { type: Number, default: 0 },
+	//type 0==comment评论 pid文章id cid评论id isread 0未读 1已读  
+	notice: [{ id: String, type: String, pid: String, cid: String, isread: { type: Number, default: 0 } }]
 })
 
 const postSchema = new Schema({
@@ -29,8 +31,8 @@ const postSchema = new Schema({
 	title: String,
 	content: String,
 	time: String,
-	// read 0未读 1已读  name评论人用户名
-	comments: [{ name: String, time: String, text: String, read: Number }],
+	// name评论人用户名
+	comments: [{ id: String, name: String, time: String, text: String }],
 	tags: Array,
 	pv: { type: Number, default: 0 }
 })

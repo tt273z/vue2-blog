@@ -6,6 +6,7 @@ const moment = require('moment')
 const mongoose = require('mongoose')
 const config = require('../utils/config')
 const shortid = require('shortid');
+const WebSocket = require('ws');
 const ObjectId = mongoose.Types.ObjectId
 
 var wss = require('../utils/ws.js')
@@ -13,6 +14,7 @@ var wss = require('../utils/ws.js')
 const error = chalk.bold.red
 const success = chalk.bold.green
 
+const connection = config.connection
 
 //发表文章
 const post = (req, res, next) => {
@@ -117,34 +119,33 @@ const addComment = (req, res, next) => {
 				res.send(new Number(0))
 				return next(err)
 			} else {
+				
 				//根据请求参数中的 author(被评论文章的用户名) 进行消息推送
-				//如果用户在线直接推送 不在线先存储等上线一并推送
 				Model.User.findOne({ name: req.body.author }, (err, docs) => {
-					if(err) return next(err)
-					if(docs.online) { //1在线0离线
-						let ws = new WebSocket(`${config.wsServer}`)
-	          ws.onopen = () => {
-	            console.log('comment ws is opened')
-	            //生成消息并push到user文档中
-	            let notice = {
-	            	id: shortid.generate(),
-	            	type: 'comment',
-	            	pid: req.body.id,
-	            	cid: cid
-	            }
-	            ws.send(JSON.stringify(Object.assign(notice, { author: req.body.author})))
-	            ws.onclose()
-	          }
-	          ws.onclose = () => console.log('comment ws is closed')
-					} else {
-
+					if(err) console.log(err) 
+				  let notice = {
+				  	id: shortid.generate(),
+				  	stype: 'comment',
+				  	pid: req.body.id,
+				  	cid: cid
+				  }					
+					if(docs.online) { //如果用户在线直接通过ws转发消息到被评论人
+			    	if(!!connection[req.body.author]) {
+			    		connection[req.body.author].send(JSON.stringify(Object.assign(notice, { username: req.body.author})))
+			    	}
+					} else { //如果用户不在线 先存储新消息 后等待被评论人上线后推送
+						console.log(config.offlineNotice)
+						if(!config.offlineNotice[req.body.author]) 
+							config.offlineNotice[req.body.author] = []
+						config.offlineNotice[req.body.author].push(Object.assign(notice, { username: req.body.author}))
 					}
-					//TODO
 					Model.User.update({ name: req.body.author }, 
 						{ $push: { notice: notice } }, (err) => {
-							if(err) return next(err)
+							if(err) console.log(err) 
+							console.log('消息数据已添加')
 					})
 				})
+
 				res.send(new Number(1))
 			}
 		})

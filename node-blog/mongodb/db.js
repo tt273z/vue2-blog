@@ -23,7 +23,7 @@ const userSchema = new Schema({
 	token: String,
 	online: { type: Number, default: 0 },
 	//type 0==comment评论 pid文章id cid评论id isread 0未读 1已读  
-	notice: [{ id: String, type: String, pid: String, cid: String, isread: { type: Number, default: 0 } }]
+	notice: [{ id: String, stype: String, pid: String, cid: String, isread: { type: Number, default: 0 } }]
 })
 
 const postSchema = new Schema({

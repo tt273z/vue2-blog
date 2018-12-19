@@ -67,19 +67,19 @@ export default {
     return {
       isVisible: false,
       ws: {},
+      wsData: {},
     }
   },
   created(){
-    let username = this.$store.state.username
-    if(!username) return
+    if(!this.username) return
     this.ws = new WebSocket(`${config.wsServer}`)
     this.ws.onopen = () => {
-      console.log(username + ':user login ws is opened')
-      this.ws.send(JSON.stringify({ type: 'login', username }))
+      console.log(this.username + ':user login ws is opened')
+      this.ws.send(JSON.stringify({ type: 'login', username: this.username }))
     }
     this.ws.onmessage = (ev) => {
       console.log(ev.data)
-      let data = JSON.parse(ev.data)
+      this.wsData = JSON.parse(ev.data)
       this.$notify({
         title: '消息通知',
         message: `收到一条新评论`,
@@ -87,13 +87,16 @@ export default {
       });
     }
     this.ws.onclose = () => {
-      console.log(username + ':login ws is closed')
+      console.log(this.username + ':login ws is closed')
     }
   },
   computed: {
     //右上角显示文字 已登录显示用户名未登录显示login
     topText: function(){
-      return this.$store.state.username? this.$store.state.username: 'Login'
+      return this.username? this.username: 'Login'
+    },
+    username: function(){
+      return this.$store.state.username
     }
   },
   methods: {
@@ -122,6 +125,7 @@ export default {
           .then(({data}) => {
             if(data.code) {
               this.$store.dispatch('userLogout')
+              this.ws.send(JSON.stringify({ type: 'logout', username: this.username }))
               this.ws.onclose()
               this.$message({ type: 'success', message: '已退出当前账号' })
               this.$router.push('/')              
@@ -140,7 +144,7 @@ export default {
       }
     },
     pop(){
-      if(!this.$store.state.username) { //未登录状态下 弹出登录注册框
+      if(!this.username) { //未登录状态下 弹出登录注册框
         this.isVisible = true
       }
     }

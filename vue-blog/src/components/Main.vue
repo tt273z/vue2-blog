@@ -12,16 +12,16 @@
             <el-menu-item index="/notice">消息中心</el-menu-item>
           </el-badge>
           <el-menu-item index="/users">用户管理</el-menu-item>
-          <el-dropdown @command="onCommand" v-if="$store.state.username">
+          <el-dropdown @command="onCommand" v-if="username">
             <span class="el-dropdown-link" @click="pop">
-              {{ topText }}<i class="el-icon-arrow-down el-icon--right"></i>
+              {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="user">个人</el-dropdown-item>
               <el-dropdown-item command="exit">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <span @click="pop" class="login-link" v-else>{{ topText }}</span>
+          <span @click="pop" class="login-link" v-else>Login</span>
           <Login @changeVisible="closeDialogForm" :dialogFormVisible="isVisible"/>    
         </el-menu>
       </div>
@@ -79,6 +79,7 @@ export default {
     }
     this.ws.onmessage = (ev) => {
       console.log(ev.data)
+      if(ev.data)
       this.wsData = JSON.parse(ev.data)
       this.$notify({
         title: '消息通知',
@@ -89,12 +90,11 @@ export default {
     this.ws.onclose = () => {
       console.log(this.username + ':login ws is closed')
     }
+    window.onunload = function() {
+      http.logout(this.username).then(() => {})
+    }
   },
   computed: {
-    //右上角显示文字 已登录显示用户名未登录显示login
-    topText: function(){
-      return this.username? this.username: 'Login'
-    },
     username: function(){
       return this.$store.state.username
     }
@@ -121,7 +121,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        http.logout(this.topText)
+        http.logout(this.username)
           .then(({data}) => {
             if(data.code) {
               this.$store.dispatch('userLogout')

@@ -76,13 +76,13 @@ export default {
   delUser(data) { //删除用户
     return axios.post('/delUser', data)
   },
-  getUserInfo(name){
+  getUserInfo(name){ //getuserinfobyname
     return axios.get('/getUser', { params: { name: name } })
   },
-  queryByCondition(data){
+  queryByCondition(data){ //综合条件查询
     return axios.post('/tool/query', data)
   },
-  getAllTags(){
+  getAllTags(){ //获得全部标签
     return axios.get('/posts/tags')
   }
 

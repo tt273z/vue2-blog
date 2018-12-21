@@ -133,6 +133,15 @@ const getUserByName = (req, res, next) =>　{
 	})
 }
 
+const noticeIsRead = (req, res, next) => {
+	Model.User.updateOne({ name: req.query.name }, (err, docs) => {
+		if(err) return next(err)
+		docs.map(e => {
+			
+		})
+	})
+}
+
 //图片上传
 const uploadAvatar = (req, res, next) => {
 	let form = new formidable.IncomingForm()

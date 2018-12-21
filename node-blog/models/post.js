@@ -124,7 +124,6 @@ const addComment = (req, res, next) => {
 				Model.User.findOne({ name: req.body.author }, (err, docs) => {
 					if(err) console.log(err) 
 				  let notice = {
-				  	id: shortid.generate(),
 				  	stype: 'comment',
 				  	pid: req.body.id,
 				  	cid: cid

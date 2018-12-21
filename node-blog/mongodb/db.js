@@ -6,9 +6,9 @@ mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser:true})
 
 const db = mongoose.connection
 
-db.on('error', console.error.bind(console, '数据库连接失败'))
+db.on('error', console.error.bind(console, 'mongodb connected failed'))
 db.once('open', () => {
-	console.log('数据库连接成功')
+	console.log('mongodb connected successful')
 })
 
 //模式

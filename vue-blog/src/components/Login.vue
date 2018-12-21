@@ -130,6 +130,7 @@ export default {
           this.present(res.message, 'success')
           this.activeName = 'loginForm'
           this.clearForm()
+          this.$emit('hasLogged')
         } else {
           this.present(res.message, 'error')
           this.registerForm.password = this.registerForm.checkPassword = ''

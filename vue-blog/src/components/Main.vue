@@ -22,7 +22,7 @@
             </el-dropdown-menu>
           </el-dropdown>
           <span @click="pop" class="login-link" v-else>Login</span>
-          <Login @changeVisible="closeDialogForm" :dialogFormVisible="isVisible"/>    
+          <Login @changeVisible="closeDialogForm" @hasLogged="openWebSocket" :dialogFormVisible="isVisible"/>    
         </el-menu>
       </div>
     </el-header>
@@ -70,28 +70,9 @@ export default {
       wsData: {},
     }
   },
-  created(){
-    if(!this.username) return
-    this.ws = new WebSocket(`${config.wsServer}`)
-    this.ws.onopen = () => {
-      console.log(this.username + ':user login ws is opened')
-      this.ws.send(JSON.stringify({ type: 'login', username: this.username }))
-    }
-    this.ws.onmessage = (ev) => {
-      console.log(ev.data)
-      if(ev.data)
-      this.wsData = JSON.parse(ev.data)
-      this.$notify({
-        title: '消息通知',
-        message: `收到一条新评论`,
-        duration: 0
-      });
-    }
-    this.ws.onclose = () => {
-      console.log(this.username + ':login ws is closed')
-    }
-    window.onunload = function() {
-      http.logout(this.username).then(() => {})
+  created(){ //页面刷新重新连接ws
+    if(this.username) {
+      this.openWebSocket()
     }
   },
   computed: {
@@ -147,6 +128,26 @@ export default {
       if(!this.username) { //未登录状态下 弹出登录注册框
         this.isVisible = true
       }
+    },
+    openWebSocket(){
+      this.ws = new WebSocket(`${config.wsServer}`)
+      this.ws.onopen = () => {
+        console.log(this.username + ':user login ws is opened')
+        this.ws.send(JSON.stringify({ type: 'login', username: this.username }))
+      }
+      this.ws.onmessage = (ev) => {
+        console.log(ev.data)
+        if(ev.data)
+        this.wsData = JSON.parse(ev.data)
+        this.$notify({
+          title: '消息通知',
+          message: `收到一条新评论`,
+          duration: 0
+        });
+      }
+      this.ws.onclose = () => {
+        console.log(this.username + ':login ws is closed')
+      }
     }
   }
 };
@@ -169,6 +170,7 @@ export default {
     color: #ffd04b;
     font-size: 14px;
     cursor: pointer;
+    outline: none;
   }
   .el-badge__content.is-fixed { 
     margin-top: 10px;

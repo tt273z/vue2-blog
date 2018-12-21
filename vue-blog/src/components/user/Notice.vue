@@ -1,7 +1,7 @@
 <template>
   <div class="notice">
-    <el-checkbox v-model="checked" @change="changeCheck">未读</el-checkbox>
-    <el-checkbox v-model="checked">已读</el-checkbox>    
+    <el-checkbox v-model="notRead" @change="changeNotReadCheck">未读</el-checkbox>
+    <el-checkbox v-model="isRead" @change="changeIsReadCheck">已读</el-checkbox>    
     <el-button type="primary" size="mini" style="margin: 0 0 16px 16px;">全部标为已读</el-button>
     <el-card style="margin-bottom:5px;" shadow="hover" v-for="(notice, index) in noticeList" 
              :key="index" class="card">
@@ -19,18 +19,25 @@ export default {
   name: 'Notice',
   data(){
     return {
-      checked: true,
+      isRead: true,
+      notRead: true,
       noticeList: []
     }
   },
   created(){
-    http.getUserInfo(this.$store.state.username)
-      .then(({ data }) => {
-        this.noticeList = data.notice
-      })
+    this.getNoticeList()
   },
   methods: {
-    changeCheck(ev){
+    getNoticeList(){
+      http.getUserInfo(this.$store.state.username)
+        .then(({ data }) => {
+          this.noticeList = data.notice
+        })
+    },
+    changeNotReadCheck(ev){
+      console.log(ev)
+    },
+    changeIsReadCheck(ev){
       console.log(ev)
     },
   }

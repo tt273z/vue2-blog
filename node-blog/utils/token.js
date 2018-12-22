@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 module.exports = {
 	createToken: (name) => {
-		return jwt.sign({ name: name }, 'secret', { expiresIn: '1h' })
+		return jwt.sign({ name: name }, 'secret', { expiresIn: '12h' })
 	},
 	checkToken: (req, res, next) => {
 		console.dir(req.headers)

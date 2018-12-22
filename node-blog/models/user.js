@@ -6,6 +6,8 @@ const formidable = require('formidable')
 const fs = require('fs')
 const path = require('path')
 const token = require('../utils/token')
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
 
 const error = chalk.bold.red
 const success = chalk.bold.green
@@ -133,12 +135,12 @@ const getUserByName = (req, res, next) =>　{
 	})
 }
 
+//将消息标为已读
 const noticeIsRead = (req, res, next) => {
-	Model.User.updateOne({ name: req.query.name }, (err, docs) => {
+	Model.User.updateOne({ 'notice._id': ObjectId(req.query.id) },
+		{ $set: { 'notice.$.isread': 1 } }, (err) => {
 		if(err) return next(err)
-		docs.map(e => {
-			
-		})
+		res.send(new Number(1))
 	})
 }
 
@@ -185,6 +187,7 @@ router.get('/users', token.checkToken, getUsers)
 router.post('/delUser', token.checkToken, delUser)
 router.get('/getUser', token.checkToken, getUserByName)
 router.post('/upload', token.checkToken, uploadAvatar)
+router.get('/noticeIsRead', noticeIsRead)
 
 
 module.exports = router

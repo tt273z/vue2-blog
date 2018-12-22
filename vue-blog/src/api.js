@@ -44,7 +44,7 @@ export default {
     return axios.post('/login', data)
   },
   logout(name) {
-    return axios.get('/logout', { params: { name: name } })
+    return axios.get('/logout', { params: { name } })
   },
   post(data) { //发表文章
     return axios.post('/posts/post', data)
@@ -53,13 +53,13 @@ export default {
     return axios.get('/posts')
   },
   getPostsById(id) { //根据文章id获取文章
-    return axios.get('/posts', { params: { id: id } })
+    return axios.get('/posts', { params: { id } })
   },
   getPostsByUser(user) { //根据用户名获取文章
-    return axios.get('/posts', { params: { user: user } })
+    return axios.get('/posts', { params: { user } })
   },
   getPostsByTag(tag) { //根据标签获取文章
-    return axios.get('/posts', { params: { tag: tag } })
+    return axios.get('/posts', { params: { tag } })
   },
   editPosts(data) { //标记文章
     return axios.post('/posts/edit', data)
@@ -77,13 +77,16 @@ export default {
     return axios.post('/delUser', data)
   },
   getUserInfo(name){ //getuserinfobyname
-    return axios.get('/getUser', { params: { name: name } })
+    return axios.get('/getUser', { params: { name } })
   },
   queryByCondition(data){ //综合条件查询
     return axios.post('/tool/query', data)
   },
   getAllTags(){ //获得全部标签
     return axios.get('/posts/tags')
+  },
+  getNoticeIsRead(id){
+    return axios.get('noticeIsRead', { params: { id } })
   }
 
 }

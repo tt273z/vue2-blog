@@ -1,14 +1,14 @@
 <template>
   <div class="notice">
-    <el-checkbox v-model="notRead" @change="changeNotReadCheck">未读</el-checkbox>
-    <el-checkbox v-model="isRead" @change="changeIsReadCheck">已读</el-checkbox>    
-    <el-button type="primary" size="mini" style="margin: 0 0 16px 16px;">全部标为已读</el-button>
-    <el-card style="margin-bottom:5px;" shadow="hover" v-for="(notice, index) in noticeList" 
+    <el-checkbox v-model="notRead">未读</el-checkbox>
+    <el-checkbox v-model="isRead">已读</el-checkbox>    
+    <el-button type="primary" size="mini" style="margin: 0 0 16px 16px;" @click="noticeIsRead">全部标为已读</el-button>
+    <el-card style="margin-bottom:5px;" shadow="hover" v-for="(notice, index) in showNoticeList" 
              :key="index" class="card">
       <el-badge is-dot :hidden="!!notice.isread">
         <p v-fl class="notice-title">收到一条新评论</p>
-        <el-button v-fr type="text" size="mini">查看</el-button>
-        <el-button v-fr type="text" size="mini" :disabled="notice.isread" @click="noticeIsRead(notice._id)">已读 </el-button>
+        <el-button v-fr type="text" size="mini" @click="pushDetail(notice.pid)">查看</el-button>
+        <el-button v-fr type="text" size="mini" style="margin-right: 10px;" :disabled="!!notice.isread" @click="noticeIsRead(notice._id)">已读</el-button>
       </el-badge>
     </el-card>
   </div>
@@ -28,24 +28,36 @@ export default {
   created(){
     this.getNoticeList()
   },
+  computed: {
+    showNoticeList(){
+      if(this.isRead && this.notRead) { //all
+        return this.noticeList
+      } else if(this.isRead && !this.notRead) { //仅已读
+        return this.noticeList.filter(e => e.isread)
+      } else if(!this.isRead && this.notRead) { //仅未读
+        return this.noticeList.filter(e => !e.isread)
+      } else {
+        return []
+      }
+    }
+  },
   methods: {
     getNoticeList(){
       http.getUserInfo(this.$store.state.username)
         .then(({ data }) => {
           this.noticeList = data.notice
+          let n = this.noticeList.filter(e => !e.isread).length
+          this.$emit('changeNoticeNumber', n)
         })
-    },
-    changeNotReadCheck(ev){
-      console.log(ev)
-    },
-    changeIsReadCheck(ev){
-      console.log(ev)
     },
     noticeIsRead(id){
       http.getNoticeIsRead(id)
-        .then(({ data }) => {
+        .then(() => {
           this.getNoticeList()
         })
+    },
+    pushDetail(id){
+      this.$router.push({ name: 'postid', params: { id } })
     }
   }
 };

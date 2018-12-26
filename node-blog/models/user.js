@@ -137,11 +137,25 @@ const getUserByName = (req, res, next) =>　{
 
 //将消息标为已读
 const noticeIsRead = (req, res, next) => {
-	Model.User.updateOne({ 'notice._id': ObjectId(req.query.id) },
-		{ $set: { 'notice.$.isread': 1 } }, (err) => {
-		if(err) return next(err)
-		res.send(new Number(1))
-	})
+	if(req.query.id) {
+		Model.User.updateOne({ 'notice._id': ObjectId(req.query.id) },
+			{ $set: { 'notice.$.isread': 1 } }, (err) => {
+			if(err) return next(err)
+			res.send(new Number(1))
+		})
+	} else { //id不存在 全部标为已读
+		Model.User.findOne({ name: req.query.name }, (err, doc) => {
+			if(err) return next(err)
+			doc.notice.map(e => {
+				e.isread = 1
+			})
+			Model.User.updateOne({ name: req.query.name }, { notice: doc.notice },
+				err => {
+					console.log(req.query.name + '：消息全部标为已读')
+					res.send(new Number(1))
+				})
+		})
+	}
 }
 
 //图片上传

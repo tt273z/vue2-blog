@@ -8,7 +8,7 @@
           <el-menu-item index="/">博客主页</el-menu-item>      
           <el-menu-item index="/post">发表文章</el-menu-item>
           <el-menu-item index="/me">我的文章</el-menu-item>
-          <el-badge :value="3">
+          <el-badge :value="noticeNumber">
             <el-menu-item index="/notice">消息中心</el-menu-item>
           </el-badge>
           <el-menu-item index="/users">用户管理</el-menu-item>
@@ -48,7 +48,7 @@
         </el-menu>
       </el-aside>
       <el-main>
-        <router-view/>
+        <router-view @changeNoticeNumber="changeNoticeNumber"/>
       </el-main>
     </el-container>
   </el-container>
@@ -68,6 +68,7 @@ export default {
       isVisible: false,
       ws: {},
       wsData: {},
+      noticeNumber: 3
     }
   },
   created(){ //页面刷新重新连接ws
@@ -81,6 +82,9 @@ export default {
     }
   },
   methods: {
+    changeNoticeNumber(n){
+      this.noticeNumber = n
+    },
     handleSelect(key){
       let crumbList = []
       if(key == '/') {

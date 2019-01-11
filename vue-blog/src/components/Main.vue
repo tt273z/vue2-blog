@@ -37,7 +37,7 @@
             <i class="el-icon-menu"></i>
             <span slot="title">用户管理</span>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="/statistic">
             <i class="el-icon-document"></i>
             <span slot="title">统计分析</span>
           </el-menu-item>

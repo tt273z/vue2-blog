@@ -45,7 +45,12 @@ const router = new Router({
     }, {
       path: '/notice',
       name: 'notice',
+      meta: { needLogin: true },
       component: () => import('@/components/user/Notice.vue')
+    }, {
+      path: '/statistic',
+      name: 'statistic',
+      component: () => import('@/components/tool/Statistic.vue')
     }
   ]
 })

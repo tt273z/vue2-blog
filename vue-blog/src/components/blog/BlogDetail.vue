@@ -32,7 +32,6 @@
 
 <script>
 import http from "@/api"
-import config from '@/assets/config'
 export default {
   name: "BlogDetail",
   created() {

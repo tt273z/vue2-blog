@@ -85,8 +85,14 @@ export default {
   getAllTags(){ //获得全部标签
     return axios.get('/posts/tags')
   },
-  getNoticeIsRead(id){
-    return axios.get('noticeIsRead', { params: { id } })
+  getNoticeIsRead(id){ //消息已读
+    return axios.get('/noticeIsRead', { params: { id } })
+  }, 
+  getYearPvStatistics(){ //pv统计趋势图
+    return axios.get('/tool/getYearPvStatistics')
+  },
+  getTagsWordCloud(){ //tag字符云
+    return axios.get('/tool/getTagsWordCloud')
   }
 
 }

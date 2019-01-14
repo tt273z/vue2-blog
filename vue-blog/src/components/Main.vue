@@ -8,7 +8,7 @@
           <el-menu-item index="/">博客主页</el-menu-item>      
           <el-menu-item index="/post">发表文章</el-menu-item>
           <el-menu-item index="/me">我的文章</el-menu-item>
-          <el-badge :value="noticeNumber">
+          <el-badge :value="noticeNumber" :hidden="!noticeNumber">
             <el-menu-item index="/notice">消息中心</el-menu-item>
           </el-badge>
           <el-menu-item index="/users">用户管理</el-menu-item>
@@ -33,14 +33,14 @@
             <i class="el-icon-menu"></i>
             <span slot="title">条件查询</span>
           </el-menu-item>
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <span slot="title">用户管理</span>
-          </el-menu-item>
           <el-menu-item index="/statistic">
             <i class="el-icon-document"></i>
             <span slot="title">统计分析</span>
           </el-menu-item>
+          <!-- <el-menu-item index="2">
+            <i class="el-icon-menu"></i>
+            <span slot="title">用户管理</span>
+          </el-menu-item> -->
           <el-menu-item index="4">
             <i class="el-icon-setting"></i>
             <span slot="title">设置</span>
@@ -68,7 +68,7 @@ export default {
       isVisible: false,
       ws: {},
       wsData: {},
-      noticeNumber: 3
+      noticeNumber: 0
     }
   },
   created(){ //页面刷新重新连接ws

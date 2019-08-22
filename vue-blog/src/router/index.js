@@ -60,7 +60,7 @@ router.beforeEach((to, from, next) => {
   if(!to.meta.needLogin) return next()
   let token = sessionStorage.getItem('token')
   if (!token) {
-    // 若本地token不存在 跳转到首页  TODO
+    // 若本地token不存在 跳转到首页
     Vue.prototype.$message({ message: '请先登录' })
     next('/')
   } else {

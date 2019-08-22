@@ -3,7 +3,7 @@ export default (Vue) => {
     bind: function (el) {
       el.style.cssFloat = 'right'
     }
-  }),
+  })
   Vue.directive('fl', {
     bind: function (el) {
       el.style.cssFloat = 'left'
